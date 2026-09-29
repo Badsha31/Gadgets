@@ -1,0 +1,12 @@
+{
+  "brand":"NEXORA TECH","maker":"Made by NEXORA WEB","whatsapp":"01944299143",
+  "categories":["Laptop","Desktop PC","PC Components","Monitor","Gaming","Accessories","Gadget","Mobile & Tablet","Networking","Printer & Office","Camera","TV & Home Appliance"],
+  "products":[
+    {"id":"NT-1001","name":"NEXORA Core Gaming PC — RTX Ready","category":"Desktop PC","brand":"NEXORA","price":89990,"oldPrice":99990,"stock":12,"rating":4.9,"badge":"Best Seller","image":"https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=900&q=85"},
+    {"id":"NT-1002","name":"NEXORA Ultra 27 180Hz Gaming Monitor","category":"Monitor","brand":"NEXORA","price":32990,"oldPrice":37990,"stock":18,"rating":4.8,"badge":"Gaming","image":"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=900&q=85"},
+    {"id":"NT-1003","name":"ProBook Creator 14 — Core Ultra","category":"Laptop","brand":"NEXORA","price":104990,"oldPrice":114990,"stock":7,"rating":4.9,"badge":"New","image":"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=85"},
+    {"id":"NT-1004","name":"Mechanical RGB Gaming Keyboard","category":"Accessories","brand":"NEXORA","price":5490,"oldPrice":6490,"stock":30,"rating":4.7,"badge":"Deal","image":"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=900&q=85"},
+    {"id":"NT-1005","name":"2TB NVMe Gen4 SSD","category":"PC Components","brand":"NEXORA","price":16990,"oldPrice":19990,"stock":25,"rating":4.8,"badge":"Fast","image":"https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=900&q=85"},
+    {"id":"NT-1006","name":"Wi-Fi 6 Dual Band Router","category":"Networking","brand":"NEXORA","price":6990,"oldPrice":7990,"stock":21,"rating":4.6,"badge":"Popular","image":"https://images.unsplash.com/photo-1606904825846-647eb07f5be2?auto=format&fit=crop&w=900&q=85"}
+  ]
+}
