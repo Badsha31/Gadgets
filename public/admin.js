@@ -1,0 +1,3 @@
+let token="";const $=s=>document.querySelector(s);
+$("#loginBtn").onclick=async()=>{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:$("#user").value,password:$("#pass").value})});const d=await r.json();if(!r.ok)return alert(d.error||"Login failed");token=d.token;$("#login").hidden=true;$("#panel").hidden=false};
+$("#productForm").onsubmit=async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));const r=await fetch("/api/admin/products",{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token}`},body:JSON.stringify(data)});const d=await r.json();$("#adminOut").textContent=JSON.stringify(d,null,2);if(r.ok)e.target.reset()};
