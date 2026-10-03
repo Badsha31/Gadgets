@@ -1,12 +1,12 @@
 {
   "name": "nexora-tech-store",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "private": true,
   "description": "NEXORA TECH multi-layer commerce site on Cloudflare Workers",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy ./worker.js --name nexora-tech-store --compatibility-date 2026-10-01",
-    "check": "node --check worker.js && node --check public/cf-app.js && node --check public/app.js && node --check public/admin.js"
+    "deploy": "wrangler deploy",
+    "check": "node --check public/cf-app.js && node --check public/app.js && node --check public/admin.js"
   },
   "devDependencies": {
     "wrangler": "^4.147.0"
