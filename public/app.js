@@ -1,41 +1,568 @@
-const qs=(s,r=document)=>r.querySelector(s);
-const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-let site=null;
-let cart=JSON.parse(localStorage.getItem("nexora_cart")||"[]");
-const money=n=>"৳"+Number(n||0).toLocaleString("en-BD");
-const safe=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-function save(){localStorage.setItem("nexora_cart",JSON.stringify(cart))}
-function find(id){return(site.products||[]).find(x=>x.id===id)}
-function total(){return cart.reduce((a,x)=>a+x.price*x.qty,0)}
-function toast(m,e){const x=qs("#toast");x.textContent=m;x.className="toast show"+(e?" error":"");setTimeout(()=>x.className="toast",2200)}
-function chrome(){const s=site.settings||{},w="https://wa.me/"+(s.whatsapp||"");qs("#cartCount").textContent=cart.reduce((a,x)=>a+x.qty,0);qs("#headerWA").href=w;qs("#agentWA").href=w;qs("#agentCall").href="tel:"+(s.phone||"");qs("#agentMessenger").href=s.messenger||"#";qs("#footerTagline").textContent=s.tagline||"";qs("#footerPhone").textContent=s.phone||"—";qs("#footerPhone").href="tel:"+(s.phone||"");qs("#footerEmail").textContent=s.email||"—";qs("#footerEmail").href="mailto:"+(s.email||"");qs("#footerAddress").textContent=s.address||"";qs("#socialRow").innerHTML=Object.entries(s.socials||{}).map(([k,v])=>"<a class='social' href='"+safe(v||"#")+"' target='_blank' rel='noopener'>"+safe(({facebook:"f",instagram:"◎",tiktok:"♪",youtube:"▶",whatsapp:"◉"}[k]||"•"))+"</a>").join("")}
-function card(p){return"<article class='productCard'><a class='productImage' href='/product/"+encodeURIComponent(p.id)+"'><span class='badge'>"+safe(p.badge||"Featured")+"</span><img src='"+safe(p.image)+"' alt='"+safe(p.name)+"' loading='lazy'></a><div class='productBody'><div class='muted'>"+safe(p.brand)+" · "+safe(p.category)+"</div><h3><a href='/product/"+encodeURIComponent(p.id)+"'>"+safe(p.name)+"</a></h3><div class='rating'>★★★★★ <span>"+safe(p.rating)+"</span></div><div class='price'>"+money(p.price)+" <del>"+money(p.oldPrice||p.price)+"</del></div><div class='cardActions'><button class='smallBtn primaryBtn' data-add='"+safe(p.id)+"'>Add to cart</button><button class='smallBtn' data-compare='"+safe(p.id)+"'>Compare</button></div></div></article>"}
-function layout(t,k,d,b){return"<section class='pageHero'><div class='wrap'><div class='eyebrow'>"+safe(k)+"</div><h1>"+safe(t)+"</h1><p>"+safe(d)+"</p></div></section>"+b}
-function home(){const s=site.settings,c=(site.categories||[]).slice(0,8),icons=["◫","▣","◈","▤","◉","⌘","✦","▥"];return"<section class='hero'><div class='wrap heroGrid'><div class='heroCopy'><div class='eyebrow'>NEXORA TECH · FUTURE-READY SHOPPING</div><h1>"+safe(s.heroTitle)+"</h1><p>"+safe(s.heroDescription)+"</p><div class='heroBtns'><a class='btn primary' href='/shop'>Shop technology ↗</a><a class='btn ghost' href='/contact'>Build my website ↗</a></div><div class='heroTrust'><span>✓ Curated products</span><span>✓ PC builder</span><span>✓ Secure checkout</span><span>✓ NEXORA WEB support</span></div></div><div class='heroVisual'><div class='heroGlow'></div><div class='heroFrame'><img src='"+safe(s.heroImage)+"' alt='Technology workspace'></div><div class='floatingCard'><small>MADE BY NEXORA WEB</small><strong>One platform. Multiple layers.</strong><span>Shop · Services · Portfolio · Admin</span></div></div></div></section><div class='trustStrip'><div><b>Fast discovery</b><small>Search, categories and compare</small></div><div><b>Build smarter</b><small>PC recommendation flow</small></div><div><b>Order simply</b><small>Cart and checkout in BDT</small></div><div><b>Editable layer</b><small>Admin-ready content control</small></div></div><section class='section'><div class='wrap'><div class='sectionHead'><div><div class='eyebrow'>SHOP BY CATEGORY</div><h2>Choose your layer.</h2></div><a href='/shop'>Browse all →</a></div><div class='categoryGrid'>"+c.map((x,i)=>"<a class='catCard' href='/shop?category="+encodeURIComponent(x)+"'><span>"+icons[i%icons.length]+"</span><b>"+safe(x)+"</b><small>Explore</small></a>").join("")+"</div></div></section><section class='section soft'><div class='wrap'><div class='sectionHead'><div><div class='eyebrow'>FEATURED GEAR</div><h2>Built for everyday.</h2></div><a href='/shop'>See all products →</a></div><div class='productGrid'>"+site.products.slice(0,4).map(card).join("")+"</div></div></section><section class='section'><div class='wrap twoCol'><div><div class='eyebrow'>NEXORA WEB SERVICES</div><h2>Need a website behind the brand?</h2><p>Basic, Business, Premium E-commerce and Custom Development—designed and responsive.</p><div class='heroBtns'><a class='btn primary' href='/services'>Explore services ↗</a><a class='btn ghost' href='/packages'>See packages ↗</a></div></div><div class='serviceGrid'>"+site.services.slice(0,2).map(x=>"<article class='featureCard'><div class='serviceIcon'>"+safe(x.icon)+"</div><div><div class='eyebrow'>SERVICE</div><h3>"+safe(x.title)+"</h3><p>"+safe(x.description)+"</p><ul>"+(x.features||[]).slice(0,4).map(f=>"<li>✓ "+safe(f)+"</li>").join("")+"</ul></div></article>").join("")+"</div></div></section><section class='section darkSection'><div class='wrap'><div class='sectionHead'><div><div class='eyebrow'>REVIEWS</div><h2>What customers say.</h2></div><a href='/reviews'>All reviews →</a></div><div class='reviewTrack'>"+[...(site.reviews||[]),...(site.reviews||[])].map(x=>"<article class='reviewCard'><div class='reviewHead'><img src='"+safe(x.image)+"' alt=''><div><b>"+safe(x.name)+"</b><span>"+safe(x.date)+"</span></div><strong>★★★★★</strong></div><p>“"+safe(x.text)+"”</p></article>").join("")+"</div></div></section><section class='contactBanner'><div class='wrap contactBannerInner'><div><div class='eyebrow'>MADE BY NEXORA WEB</div><h2>Ready to build the next layer?</h2><p>Talk to the team about your store, website or custom build.</p></div><a class='btn ghost' href='/contact'>Start a conversation ↗</a></div></section>"}
-function shop(){const u=new URLSearchParams(location.search);return layout("Technology, without the clutter.","NEXORA SHOP","Search, compare and order technology.","<section class='section'><div class='wrap'><div class='shopFilters'><input id='shopSearch' placeholder='Search products...' value='"+safe(u.get("q")||"")+"'><select id='categoryFilter'><option value=''>All categories</option>"+(site.categories||[]).map(c=>"<option "+(c===u.get("category")?"selected":"")+">"+safe(c)+"</option>").join("")+"</select><select id='sort'><option value='featured'>Featured</option><option value='low'>Price: low to high</option><option value='high'>Price: high to low</option></select></div><div id='shopProducts' class='productGrid'></div></div></section>")}
-function renderShop(){const o=qs("#shopProducts");if(!o)return;const q=(qs("#shopSearch")?.value||"").toLowerCase(),c=qs("#categoryFilter")?.value||"",s=qs("#sort")?.value||"featured";let a=site.products.filter(p=>(!q||(p.name+" "+p.brand+" "+p.category+" "+p.description).toLowerCase().includes(q))&&(!c||p.category===c));if(s==="low")a.sort((x,y)=>x.price-y.price);if(s==="high")a.sort((x,y)=>y.price-x.price);o.innerHTML=a.length?a.map(card).join(""):"<div class='emptyState'><h3>No matching products.</h3></div>";bindAdd(o)}
-function detail(id){const p=find(id);if(!p)return layout("Product not found","NEXORA SHOP","This product is no longer available.","<section class='section'><div class='wrap'><div class='emptyState'><h2>Product not found.</h2><a class='btn primary' href='/shop'>Back to shop ↗</a></div></div></section>");return"<section class='productHero'><div class='wrap productDetailGrid'><div class='detailImage'><img src='"+safe(p.image)+"' alt='"+safe(p.name)+"'></div><div><div class='eyebrow'>"+safe(p.category)+"</div><h1>"+safe(p.name)+"</h1><div class='rating'>★★★★★ <span>"+safe(p.rating)+"/5</span></div><div class='detailPrice'>"+money(p.price)+" <del>"+money(p.oldPrice||p.price)+"</del></div><p class='muted'>"+safe(p.description)+"</p><div class='stockNote'>✓ "+safe(p.stock)+" in stock</div><div class='detailActions'><button class='btn primary' data-add='"+safe(p.id)+"'>Add to cart</button><a class='btn ghost' href='/contact?product="+encodeURIComponent(p.name)+"'>Ask an agent ↗</a></div></div></div></section><section class='section soft'><div class='wrap'><div class='sectionHead'><div><div class='eyebrow'>DETAILS</div><h2>Specifications.</h2></div></div><div class='specGrid'>"+Object.entries(p.specs||{}).map(([k,v])=>"<div><span>"+safe(k)+"</span><strong>"+safe(v)+"</strong></div>").join("")+"</div></div></section>"}
-function services(){return layout("Digital products, built around your business.","NEXORA WEB SERVICES","Professional website development from landing pages to premium commerce.","<section class='section'><div class='wrap serviceGrid'>"+site.services.map(x=>"<article id='"+safe(x.id)+"' class='featureCard'><div class='serviceIcon'>"+safe(x.icon)+"</div><div><div class='eyebrow'>SERVICE</div><h3>"+safe(x.title)+"</h3><p>"+safe(x.description)+"</p><ul>"+(x.features||[]).map(f=>"<li>✓ "+safe(f)+"</li>").join("")+"</ul><a class='btn ghost' href='/contact?service="+encodeURIComponent(x.title)+"'>Discuss ↗</a></div></article>").join("")+"</div></section>")}
-function packages(){return layout("Packages that scale with the brief.","NEXORA WEB PACKAGES","Clear starting points for websites and e-commerce builds.","<section class='section'><div class='wrap packageGrid'>"+site.packages.filter(x=>x.visibility!==false).map(x=>"<article class='packageCard "+(x.featured?"featured":"")+"\"><div class='packageTop'><span>"+(x.featured?"MOST REQUESTED":"PACKAGE")+"</span></div><h3>"+safe(x.name)+"</h3><div class='packagePrice'>"+money(x.price)+" <small>"+safe(x.period)+"</small></div><ul>"+(x.features||[]).map(f=>"<li>✓ "+safe(f)+"</li>").join("")+"</ul><a class='btn "+(x.featured?"primary":"ghost")+"' href='/contact?package="+encodeURIComponent(x.name)+"'>Choose package ↗</a></article>").join("")+"</div></section>")}
-function portfolio(){return layout("Work that shows the system.","PORTFOLIO","Selected product, business and app concepts.","<section class='section'><div class='wrap portfolioList'>"+site.portfolio.map(x=>"<article id='"+safe(x.id)+"' class='portfolioDetail'><img src='"+safe(x.image)+"' alt='"+safe(x.title)+"'><div class='portfolioInfo'><span>"+safe(x.category)+"</span><h2>"+safe(x.title)+"</h2><p>"+safe(x.description)+"</p><div class='featurePills'>"+(x.technology||[]).map(t=>"<span>"+safe(t)+"</span>").join("")+"</div><a class='btn ghost' target='_blank' rel='noopener' href='"+safe(x.url||"#")+"'>Open project ↗</a></div></article>").join("")+"</div></section>")}
-function reviews(){return layout("Built around real feedback.","CUSTOMER REVIEWS","A rolling wall of customer thoughts.","<section class='section'><div class='wrap reviewGrid'>"+site.reviews.map(x=>"<article class='reviewBig'><img src='"+safe(x.image)+"' alt=''><div><div class='rating'>★★★★★ <span>"+safe(x.rating)+"</span></div><h3>"+safe(x.name)+"</h3><small>"+safe(x.date)+"</small><p>“"+safe(x.text)+"”</p></div></article>").join("")+"</div></section>")}
-function about(){return layout("NEXORA TECH + NEXORA WEB.","ABOUT","Technology commerce and professional web development in one multi-layer experience.","<section class='section'><div class='wrap aboutGrid'><div><div class='eyebrow'>THE SYSTEM</div><h2>One brand. Multiple experiences.</h2><p>NEXORA TECH brings products, discovery, ordering and PC-building into one storefront. NEXORA WEB provides the website layer behind businesses.</p></div><div class='metrics'><div><strong>"+site.products.length+"+</strong><span>Products</span></div><div><strong>"+site.services.length+"</strong><span>Web services</span></div><div><strong>"+site.packages.length+"</strong><span>Packages</span></div><div><strong>"+site.portfolio.length+"</strong><span>Portfolio pieces</span></div></div></div></section>")}
-function contact(){const u=new URLSearchParams(location.search);return layout("Tell us what you are building.","CONTACT AGENT","Talk about a product, package, website or custom request.","<section class='section'><div class='wrap contactGrid'><div><div class='eyebrow'>DIRECT CONTACT</div><h2>Let’s make the next step simple.</h2><p>Use the form, call, WhatsApp or Messenger.</p><div class='contactList'><a href='tel:"+safe(site.settings.phone)+"'>"+safe(site.settings.phone)+"</a><a href='mailto:"+safe(site.settings.email)+"'>"+safe(site.settings.email)+"</a><a href='https://wa.me/"+safe(site.settings.whatsapp)+"' target='_blank' rel='noopener'>WhatsApp ↗</a><span class='muted'>"+safe(site.settings.address)+"</span></div></div><div class='formCard'><form id='contactForm' class='formGrid'><label>Name<input name='name' required></label><label>Email<input name='email' type='email'></label><label>Phone<input name='phone'></label><label>Service<input name='service' value='"+safe(u.get("service")||u.get("package")||"General")+"'></label><label class='full'>Message<textarea name='message' required></textarea></label><div class='full'><button class='btn primary'>Send message ↗</button><div id='contactNotice' class='notice'></div></div></form></div></div></section>")}
-function cartPage(){return layout("Your selected gear.","CART","Review quantities before checkout.","<section class='section'><div class='wrap cartLayout'><div id='cartPageItems' class='cartPageItems'></div><aside class='summaryCard'><div class='eyebrow'>SUMMARY</div><h2 id='cartPageTotal'>৳0</h2><a class='btn primary' href='/checkout'>Continue to checkout ↗</a></aside></div></section>")}
-function checkout(){return layout("Checkout, without friction.","CHECKOUT","Send order details and the team will contact you.","<section class='section'><div class='wrap checkoutGrid'><div class='formCard'><form id='checkoutForm' class='formGrid'><label>Name<input name='name' required></label><label>Phone<input name='phone' required></label><label>Email<input name='email' type='email'></label><label>Payment<select name='payment'><option>Cash on delivery</option><option>Bank transfer</option><option>Payment gateway — ready for integration</option></select></label><label class='full'>Delivery address<textarea name='address' required></textarea></label><div class='full'><button class='btn primary'>Place order ↗</button><div id='checkoutNotice' class='notice'></div></div></form></div><aside class='summaryCard'><div class='eyebrow'>ORDER SUMMARY</div><div id='checkoutSummary'></div><h2 id='checkoutTotal'>৳0</h2></aside></div></section>")}
-function searchPage(){return layout("Find anything in the system.","SEARCH","Products, services and packages.","<section class='section'><div class='wrap'><div class='bigSearch'><input id='searchPageInput' placeholder='Search the store...'><button id='searchPageBtn' class='btn primary'>Search ↗</button></div><div id='searchResults' class='searchResults'></div></div></section>")}
-function builder(){return layout("Build a PC around the budget.","PC BUILDER","Use a target budget to get a starting recommendation.","<section class='section'><div class='wrap builderPage'><div class='formCard'><div class='eyebrow'>BUDGET</div><input id='builderBudget' type='number' min='10000' step='5000' value='90000'><div class='builderRange'><button class='chip' data-budget='60000'>৳60k</button><button class='chip' data-budget='90000'>৳90k</button><button class='chip' data-budget='120000'>৳120k</button><button class='chip' data-budget='150000'>৳150k</button></div><button id='generateBuild' class='btn primary'>Generate recommendation ↗</button></div><div id='buildResult' class='buildResult'><div class='eyebrow'>YOUR RECOMMENDATION</div><h2>Choose a budget.</h2></div></div></section>")}
-function legal(k){return layout(k==="privacy"?"Privacy":"Terms & service","TERMS & PRIVACY","Basic information for site visitors.","<section class='section'><div class='wrap legalText'><h2>"+(k==="privacy"?"Information handling":"Service and shopping terms")+"</h2><p>This website stores submitted order and contact information so the team can respond. Prices, availability and project scope are confirmed before fulfilment.</p><h2>Local storage</h2><p>The storefront uses local storage for cart preferences.</p></div></section>")}
-function render(){const p=location.pathname.replace(/\\/+$/)||"/";let h=p==="/"?home():p==="/shop"?shop():p.indexOf("/product/")===0?detail(decodeURIComponent(p.split("/")[2]||"")):p==="/services"?services():p==="/packages"?packages():p==="/portfolio"?portfolio():p==="/reviews"?reviews():p==="/about"?about():p==="/contact"?contact():p==="/cart"?cartPage():p==="/checkout"?checkout():p==="/search"?searchPage():p==="/builder"?builder():p==="/privacy"?legal("privacy"):p==="/terms"?legal("terms"):layout("Page not found","404","That route does not exist.","<section class='section'><div class='wrap'><div class='emptyState'><h2>404</h2><a class='btn primary' href='/'>Back home ↗</a></div></div></section>");qs("#app").innerHTML=h;chrome();bindPage()}
-function go(u){history.pushState({},"",u);render();scrollTo({top:0,behavior:"smooth"})}
-function bindAdd(root=document){qsa("[data-add]",root).forEach(b=>b.onclick=()=>add(b.dataset.add))}
-function add(id){const p=find(id);if(!p)return;const x=cart.find(i=>i.id===id);if(x)x.qty=Math.min(20,x.qty+1);else cart.push({id:p.id,name:p.name,price:p.price,image:p.image,qty:1});save();chrome();toast("Added to cart")}
-function renderCart(){const b=qs("#cartPageItems"),t=qs("#cartPageTotal");if(!b)return;if(!cart.length){b.innerHTML="<div class='emptyState'><h2>Your cart is empty.</h2><a class='btn primary' href='/shop'>Browse products ↗</a></div>";t.textContent=money(0);return}b.innerHTML=cart.map(i=>"<div class='cartRow'><img src='"+safe(i.image)+"'><div><strong>"+safe(i.name)+"</strong><span>"+money(i.price)+" each</span></div><div class='qty'><button data-q='"+safe(i.id)+"' data-d='-1'>−</button><input data-i='"+safe(i.id)+"' value='"+i.qty+"'><button data-q='"+safe(i.id)+"' data-d='1'>+</button></div><strong>"+money(i.price*i.qty)+"</strong><button class='removeBtn' data-r='"+safe(i.id)+"'>×</button></div>").join("");qsa("[data-q]").forEach(b=>b.onclick=()=>{const x=cart.find(i=>i.id===b.dataset.q);if(x){x.qty=Math.max(1,Math.min(20,x.qty+Number(b.dataset.d)));save();renderCart();renderCheckout();chrome()}});qsa("[data-i]").forEach(i=>i.onchange=()=>{const x=cart.find(v=>v.id===i.dataset.i);if(x){x.qty=Math.max(1,Math.min(20,Number(i.value)||1));save();renderCart();renderCheckout();chrome()}});qsa("[data-r]").forEach(b=>b.onclick=()=>{cart=cart.filter(i=>i.id!==b.dataset.r);save();renderCart();renderCheckout();chrome()});t.textContent=money(total())}
-function renderCheckout(){const b=qs("#checkoutSummary"),t=qs("#checkoutTotal");if(!b||!t)return;b.innerHTML=cart.length?cart.map(i=>"<div class='sumRow'><span>"+safe(i.name)+" × "+i.qty+"</span><b>"+money(i.price*i.qty)+"</b></div>").join(""):"<p class='muted'>Your cart is empty.</p>";t.textContent=money(total())}
-async function orderSubmit(e){e.preventDefault();if(!cart.length)return toast("Your cart is empty",true);const f=new FormData(e.target),n=qs("#checkoutNotice");try{const r=await fetch("/api/orders",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({customer:{name:f.get("name"),phone:f.get("phone"),email:f.get("email"),address:f.get("address")},payment:f.get("payment"),items:cart})}),d=await r.json();if(!r.ok)throw new Error(d.error||"Order failed");n.textContent="Order "+d.orderId+" received. We will contact you.";n.className="notice success";cart=[];save();renderCheckout();renderCart();chrome()}catch(err){n.textContent=err.message;n.className="notice error"}}
-async function contactSubmit(e){e.preventDefault();const n=qs("#contactNotice");try{const r=await fetch("/api/contact",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(Object.fromEntries(new FormData(e.target).entries()))}),d=await r.json();if(!r.ok)throw new Error(d.error||"Unable to send");n.textContent="Thanks. Your message has been received.";n.className="notice success";e.target.reset()}catch(err){n.textContent=err.message;n.className="notice error"}}
-async function chatSubmit(e){e.preventDefault();const i=qs("#chatInput"),b=qs("#chatBody"),m=i.value.trim();if(!m)return;b.insertAdjacentHTML("beforeend","<div class='msg user'>"+safe(m)+"</div>");i.value="";try{const r=await fetch("/api/chat",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({message:m})}),d=await r.json();b.insertAdjacentHTML("beforeend","<div class='msg ai'>"+safe(d.reply||"I’m here to help.")+"</div>")}catch{b.insertAdjacentHTML("beforeend","<div class='msg ai'>Network issue. Please use WhatsApp or Contact.</div>")}}
-async function searchRun(){const i=qs("#searchPageInput"),o=qs("#searchResults"),q=i?.value.trim();if(!q||!o)return;try{const r=await fetch("/api/search?q="+encodeURIComponent(q)),d=await r.json();o.innerHTML=d.length?d.map(x=>"<a class='searchItem' href='"+safe(x.url)+"'><span>"+safe(x.type)+"</span><h3>"+safe(x.title)+"</h3><p>"+safe(x.description)+"</p></a>").join(""):"<div class='emptyState'><h3>No results.</h3></div>"}catch{o.innerHTML="<div class='emptyState'>Search unavailable.</div>"}}
-function generate(){const b=Number(qs("#builderBudget")?.value||0),o=qs("#buildResult");if(!o)return;const pc=site.products.find(x=>x.category==="Desktop PC"),ssd=site.products.find(x=>x.category==="PC Components"),m=site.products.find(x=>x.category==="Monitor"),items=[pc&&pc.price<=b?pc:null,ssd&&ssd.price<=b?ssd:null,m&&m.price<=b?m:null].filter(Boolean),sum=items.reduce((a,x)=>a+x.price,0);o.innerHTML="<div class='eyebrow'>YOUR RECOMMENDATION</div><h2>"+safe(pc?.name||"Starter gaming PC")+"</h2><div class='buildLines'>"+items.map(x=>"<div><span>"+safe(x.name)+"</span><b>"+money(x.price)+"</b></div>").join("")+"</div><strong>Suggested spend: "+money(sum)+"</strong><p>Final compatibility should be confirmed before purchase.</p>"}
-function bindPage(){const n=qs("#nav"),m=qs("#menuBtn");if(m)m.onclick=()=>n.classList.toggle("open");qsa('a[href^="/"]').forEach(a=>a.onclick=e=>{if(a.origin===location.origin&&!a.href.includes("/admin")){e.preventDefault();go(a.pathname+a.search)}});const g=qs("#globalSearch");if(g)g.onkeydown=e=>{if(e.key==="Enter"&&g.value.trim())go("/search?q="+encodeURIComponent(g.value.trim()))};const ag=qs("#agentBtn");if(ag)ag.onclick=()=>qs("#agent").classList.toggle("open");const f=qs("#chatFab"),c=qs("#closeChat");if(f)f.onclick=()=>qs("#chat").classList.toggle("open");if(c)c.onclick=()=>qs("#chat").classList.remove("open");const ch=qs("#chatForm");if(ch)ch.onsubmit=chatSubmit;const cf=qs("#contactForm");if(cf)cf.onsubmit=contactSubmit;const of=qs("#checkoutForm");if(of)of.onsubmit=orderSubmit;const sh=qs("#shopSearch");if(sh)sh.oninput=renderShop;const cat=qs("#categoryFilter");if(cat)cat.onchange=renderShop;const so=qs("#sort");if(so)so.onchange=renderShop;const sb=qs("#searchPageBtn");if(sb)sb.onclick=searchRun;const si=qs("#searchPageInput");if(si)si.onkeydown=e=>{if(e.key==="Enter")searchRun()};const gb=qs("#generateBuild");if(gb)gb.onclick=generate;qsa("[data-budget]").forEach(b=>b.onclick=()=>{qs("#builderBudget").value=b.dataset.budget;generate()});bindAdd();renderShop();renderCart();renderCheckout()}
-document.addEventListener("DOMContentLoaded",async()=>{try{const r=await fetch("/api/site");if(!r.ok)throw new Error();site=await r.json();render()}catch{qs("#app").innerHTML="<section class='section'><div class='wrap'><div class='emptyState'><h2>Store data unavailable.</h2></div></div></section>"}});addEventListener("popstate",render);
+(function () {
+  "use strict";
+
+  var site = null;
+  var cart = JSON.parse(localStorage.getItem("nexora_cart") || "[]");
+
+  function qs(selector, root) {
+    return (root || document).querySelector(selector);
+  }
+
+  function qsa(selector, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(selector));
+  }
+
+  function money(value) {
+    return "৳" + Number(value || 0).toLocaleString("en-BD");
+  }
+
+  function esc(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, function (match) {
+      var map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      };
+      return map[match];
+    });
+  }
+
+  function product(id) {
+    return (site && site.products || []).find(function (item) {
+      return item.id === id;
+    });
+  }
+
+  function saveCart() {
+    localStorage.setItem("nexora_cart", JSON.stringify(cart));
+  }
+
+  function cartTotal() {
+    return cart.reduce(function (sum, item) {
+      return sum + Number(item.price || 0) * Number(item.qty || 0);
+    }, 0);
+  }
+
+  function toast(message, isError) {
+    var node = qs("#toast");
+    if (!node) return;
+    node.textContent = message;
+    node.className = "toast show" + (isError ? " error" : "");
+    window.setTimeout(function () {
+      node.className = "toast";
+    }, 2200);
+  }
+
+  function updateChrome() {
+    if (!site) return;
+    var settings = site.settings || {};
+    var whatsapp = "https://wa.me/" + (settings.whatsapp || "");
+
+    var count = cart.reduce(function (sum, item) {
+      return sum + Number(item.qty || 0);
+    }, 0);
+
+    var cartCount = qs("#cartCount");
+    if (cartCount) cartCount.textContent = count;
+
+    var headerWa = qs("#headerWA");
+    if (headerWa) headerWa.href = whatsapp;
+
+    var agentWa = qs("#agentWA");
+    if (agentWa) agentWa.href = whatsapp;
+
+    var agentCall = qs("#agentCall");
+    if (agentCall) agentCall.href = "tel:" + (settings.phone || "");
+
+    var agentMessenger = qs("#agentMessenger");
+    if (agentMessenger) agentMessenger.href = settings.messenger || "#";
+
+    var tagline = qs("#footerTagline");
+    if (tagline) tagline.textContent = settings.tagline || "";
+
+    var phone = qs("#footerPhone");
+    if (phone) {
+      phone.textContent = settings.phone || "—";
+      phone.href = "tel:" + (settings.phone || "");
+    }
+
+    var email = qs("#footerEmail");
+    if (email) {
+      email.textContent = settings.email || "—";
+      email.href = "mailto:" + (settings.email || "");
+    }
+
+    var address = qs("#footerAddress");
+    if (address) address.textContent = settings.address || "";
+
+    var socialRow = qs("#socialRow");
+    if (socialRow) {
+      var icons = { facebook: "f", instagram: "◎", tiktok: "♪", youtube: "▶", whatsapp: "◉" };
+      socialRow.innerHTML = Object.keys(settings.socials || {}).map(function (key) {
+        return "<a class='social' href='" + esc(settings.socials[key] || "#") + "' target='_blank' rel='noopener'>" +
+          esc(icons[key] || "•") + "</a>";
+      }).join("");
+    }
+  }
+
+  function addToCart(id) {
+    var p = product(id);
+    if (!p) return;
+
+    var row = cart.find(function (item) {
+      return item.id === id;
+    });
+
+    if (row) {
+      row.qty = Math.min(20, Number(row.qty || 0) + 1);
+    } else {
+      cart.push({
+        id: p.id,
+        name: p.name,
+        price: Number(p.price || 0),
+        image: p.image || "",
+        qty: 1
+      });
+    }
+
+    saveCart();
+    updateChrome();
+    toast("Added to cart");
+  }
+
+  function renderCart() {
+    var container = qs("#cartPageItems");
+    var totalNode = qs("#cartPageTotal");
+    if (!container) return;
+
+    if (!cart.length) {
+      container.innerHTML = "<div class='emptyState'><h2>Your cart is empty.</h2><a class='btn primary' href='/shop'>Browse products ↗</a></div>";
+      if (totalNode) totalNode.textContent = money(0);
+      return;
+    }
+
+    container.innerHTML = cart.map(function (item) {
+      return "<div class='cartRow'>" +
+        "<img src='" + esc(item.image) + "' alt='" + esc(item.name) + "'>" +
+        "<div><strong>" + esc(item.name) + "</strong><span>" + money(item.price) + " each</span></div>" +
+        "<div class='qty'>" +
+        "<button data-cart-minus='" + esc(item.id) + "'>−</button>" +
+        "<input data-cart-input='" + esc(item.id) + "' value='" + Number(item.qty || 1) + "' inputmode='numeric'>" +
+        "<button data-cart-plus='" + esc(item.id) + "'>+</button>" +
+        "</div>" +
+        "<strong>" + money(Number(item.price || 0) * Number(item.qty || 0)) + "</strong>" +
+        "<button class='removeBtn' data-cart-remove='" + esc(item.id) + "' aria-label='Remove'>×</button>" +
+        "</div>";
+    }).join("");
+
+    if (totalNode) totalNode.textContent = money(cartTotal());
+
+    qsa("[data-cart-minus]").forEach(function (button) {
+      button.onclick = function () {
+        changeQuantity(button.getAttribute("data-cart-minus"), -1);
+      };
+    });
+
+    qsa("[data-cart-plus]").forEach(function (button) {
+      button.onclick = function () {
+        changeQuantity(button.getAttribute("data-cart-plus"), 1);
+      };
+    });
+
+    qsa("[data-cart-input]").forEach(function (input) {
+      input.onchange = function () {
+        var row = cart.find(function (item) {
+          return item.id === input.getAttribute("data-cart-input");
+        });
+        if (!row) return;
+        row.qty = Math.max(1, Math.min(20, Number(input.value) || 1));
+        saveCart();
+        renderCart();
+        renderCheckout();
+        updateChrome();
+      };
+    });
+
+    qsa("[data-cart-remove]").forEach(function (button) {
+      button.onclick = function () {
+        var id = button.getAttribute("data-cart-remove");
+        cart = cart.filter(function (item) {
+          return item.id !== id;
+        });
+        saveCart();
+        renderCart();
+        renderCheckout();
+        updateChrome();
+      };
+    });
+  }
+
+  function renderCheckout() {
+    var summary = qs("#checkoutSummary");
+    var totalNode = qs("#checkoutTotal");
+    if (!summary || !totalNode) return;
+
+    summary.innerHTML = cart.length
+      ? cart.map(function (item) {
+          return "<div class='sumRow'><span>" + esc(item.name) + " × " + item.qty +
+            "</span><b>" + money(Number(item.price || 0) * Number(item.qty || 0)) + "</b></div>";
+        }).join("")
+      : "<p class='muted'>Your cart is empty.</p>";
+
+    totalNode.textContent = money(cartTotal());
+  }
+
+  function changeQuantity(id, delta) {
+    var row = cart.find(function (item) {
+      return item.id === id;
+    });
+    if (!row) return;
+
+    row.qty = Number(row.qty || 0) + delta;
+    if (row.qty <= 0) {
+      cart = cart.filter(function (item) {
+        return item.id !== id;
+      });
+    } else {
+      row.qty = Math.min(20, row.qty);
+    }
+
+    saveCart();
+    renderCart();
+    renderCheckout();
+    updateChrome();
+  }
+
+  function bindProducts() {
+    qsa("[data-add]").forEach(function (button) {
+      button.onclick = function () {
+        addToCart(button.getAttribute("data-add"));
+      };
+    });
+  }
+
+  function renderShop() {
+    var grid = qs("#shopProducts");
+    if (!grid) return;
+
+    var queryNode = qs("#shopSearch");
+    var categoryNode = qs("#categoryFilter");
+    var sortNode = qs("#sort");
+
+    var query = String(queryNode && queryNode.value || "").toLowerCase().trim();
+    var category = String(categoryNode && categoryNode.value || "");
+    var sort = String(sortNode && sortNode.value || "featured");
+
+    var items = (site.products || []).filter(function (item) {
+      var haystack = [
+        item.name,
+        item.brand,
+        item.category,
+        item.description
+      ].join(" ").toLowerCase();
+
+      return (!query || haystack.indexOf(query) !== -1) &&
+        (!category || item.category === category);
+    });
+
+    if (sort === "low") {
+      items.sort(function (a, b) { return Number(a.price || 0) - Number(b.price || 0); });
+    }
+    if (sort === "high") {
+      items.sort(function (a, b) { return Number(b.price || 0) - Number(a.price || 0); });
+    }
+
+    if (!items.length) {
+      grid.innerHTML = "<div class='emptyState'><h3>No matching products.</h3></div>";
+      return;
+    }
+
+    grid.innerHTML = items.map(function (item) {
+      return "<article class='productCard'>" +
+        "<a class='productImage' href='/product/" + encodeURIComponent(item.id) + "'>" +
+        "<span class='badge'>" + esc(item.badge || "Featured") + "</span>" +
+        "<img src='" + esc(item.image || "") + "' alt='" + esc(item.name) + "' loading='lazy'></a>" +
+        "<div class='productBody'><div class='muted'>" + esc(item.brand || "") + " · " + esc(item.category || "") + "</div>" +
+        "<h3><a href='/product/" + encodeURIComponent(item.id) + "'>" + esc(item.name) + "</a></h3>" +
+        "<div class='rating'>★★★★★ <span>" + esc(item.rating || 5) + "</span></div>" +
+        "<div class='price'>" + money(item.price) + " <del>" + money(item.oldPrice || item.price) + "</del></div>" +
+        "<div class='cardActions'><button class='smallBtn primaryBtn' data-add='" + esc(item.id) + "'>Add to cart</button>" +
+        "<a class='smallBtn' href='/product/" + encodeURIComponent(item.id) + "'>View</a></div></div></article>";
+    }).join("");
+
+    bindProducts();
+  }
+
+  function runSearch() {
+    var input = qs("#searchPageInput");
+    var output = qs("#searchResults");
+    if (!input || !output) return;
+
+    var query = input.value.toLowerCase().trim();
+    if (!query) {
+      output.innerHTML = "";
+      return;
+    }
+
+    var results = [];
+    (site.products || []).forEach(function (item) {
+      var text = [item.name, item.brand, item.category, item.description].join(" ").toLowerCase();
+      if (text.indexOf(query) !== -1) {
+        results.push(
+          "<a class='searchItem' href='/product/" + encodeURIComponent(item.id) + "'>" +
+          "<span>PRODUCT</span><h3>" + esc(item.name) + "</h3>" +
+          "<p>" + esc(item.description || "") + "</p></a>"
+        );
+      }
+    });
+
+    (site.services || []).forEach(function (item) {
+      var text = [item.title, item.description].join(" ").toLowerCase();
+      if (text.indexOf(query) !== -1) {
+        results.push(
+          "<a class='searchItem' href='/services'>" +
+          "<span>SERVICE</span><h3>" + esc(item.title) + "</h3>" +
+          "<p>" + esc(item.description || "") + "</p></a>"
+        );
+      }
+    });
+
+    output.innerHTML = results.length
+      ? results.join("")
+      : "<div class='emptyState'><h3>No results.</h3></div>";
+  }
+
+  function submitOrder(event) {
+    event.preventDefault();
+    var notice = qs("#checkoutNotice");
+    if (!cart.length) {
+      if (notice) {
+        notice.textContent = "Your cart is empty.";
+        notice.className = "notice error";
+      }
+      return;
+    }
+
+    var form = new FormData(event.target);
+
+    fetch("/api/orders", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        customer: {
+          name: form.get("name"),
+          phone: form.get("phone"),
+          email: form.get("email"),
+          address: form.get("address")
+        },
+        payment: form.get("payment"),
+        items: cart
+      })
+    })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          return { ok: response.ok, data: data };
+        });
+      })
+      .then(function (result) {
+        if (!result.ok) throw new Error(result.data.error || "Order failed");
+
+        if (notice) {
+          notice.textContent = "Order " + result.data.orderId + " received. We will contact you.";
+          notice.className = "notice success";
+        }
+
+        cart = [];
+        saveCart();
+        renderCart();
+        renderCheckout();
+        updateChrome();
+      })
+      .catch(function (error) {
+        if (notice) {
+          notice.textContent = error.message;
+          notice.className = "notice error";
+        }
+      });
+  }
+
+  function submitContact(event) {
+    event.preventDefault();
+    var notice = qs("#contactNotice");
+    fetch("/api/contact", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(new FormData(event.target)))
+    })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          return { ok: response.ok, data: data };
+        });
+      })
+      .then(function (result) {
+        if (!result.ok) throw new Error(result.data.error || "Unable to send");
+        if (notice) {
+          notice.textContent = "Thanks. Your message has been received.";
+          notice.className = "notice success";
+        }
+        event.target.reset();
+      })
+      .catch(function (error) {
+        if (notice) {
+          notice.textContent = error.message;
+          notice.className = "notice error";
+        }
+      });
+  }
+
+  function submitChat(event) {
+    event.preventDefault();
+    var input = qs("#chatInput");
+    var body = qs("#chatBody");
+    if (!input || !body) return;
+
+    var message = input.value.trim();
+    if (!message) return;
+
+    body.insertAdjacentHTML("beforeend", "<div class='msg user'>" + esc(message) + "</div>");
+    input.value = "";
+
+    fetch("/api/chat", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ message: message })
+    })
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        body.insertAdjacentHTML("beforeend", "<div class='msg ai'>" + esc(data.reply || "I’m here to help.") + "</div>");
+        body.scrollTop = body.scrollHeight;
+      })
+      .catch(function () {
+        body.insertAdjacentHTML("beforeend", "<div class='msg ai'>Network issue. Please use WhatsApp or Contact.</div>");
+      });
+  }
+
+  function generateBuild() {
+    var budgetNode = qs("#builderBudget");
+    var output = qs("#buildResult");
+    if (!budgetNode || !output) return;
+
+    var budget = Number(budgetNode.value || 0);
+    var picks = (site.products || [])
+      .slice()
+      .sort(function (a, b) {
+        return Math.abs(Number(a.price || 0) - budget / 3) -
+          Math.abs(Number(b.price || 0) - budget / 3);
+      })
+      .slice(0, 3);
+
+    output.innerHTML = "<div class='eyebrow'>YOUR RECOMMENDATION</div>" +
+      "<h2>Starter setup for " + money(budget) + "</h2>" +
+      "<div class='buildLines'>" +
+      picks.map(function (item) {
+        return "<div><span>" + esc(item.name) + "</span><b>" + money(item.price) + "</b></div>";
+      }).join("") +
+      "</div><p>Final compatibility should be confirmed before purchase.</p>";
+  }
+
+  function bindPage() {
+    var menu = qs("#menuBtn");
+    var nav = qs("#nav");
+    if (menu && nav) {
+      menu.onclick = function () {
+        nav.classList.toggle("open");
+      };
+    }
+
+    var agent = qs("#agentBtn");
+    var agentWrap = qs("#agent");
+    if (agent && agentWrap) {
+      agent.onclick = function () {
+        agentWrap.classList.toggle("open");
+      };
+    }
+
+    var chatFab = qs("#chatFab");
+    var chat = qs("#chat");
+    if (chatFab && chat) {
+      chatFab.onclick = function () {
+        chat.classList.toggle("open");
+      };
+    }
+
+    var closeChat = qs("#closeChat");
+    if (closeChat && chat) {
+      closeChat.onclick = function () {
+        chat.classList.remove("open");
+      };
+    }
+
+    var chatForm = qs("#chatForm");
+    if (chatForm) chatForm.onsubmit = submitChat;
+
+    var contactForm = qs("#contactForm");
+    if (contactForm) contactForm.onsubmit = submitContact;
+
+    var checkoutForm = qs("#checkoutForm");
+    if (checkoutForm) checkoutForm.onsubmit = submitOrder;
+
+    var searchInput = qs("#searchPageInput");
+    var searchButton = qs("#searchPageBtn");
+    if (searchInput) searchInput.oninput = runSearch;
+    if (searchButton) searchButton.onclick = runSearch;
+
+    var shopSearch = qs("#shopSearch");
+    var shopCategory = qs("#categoryFilter");
+    var sort = qs("#sort");
+    if (shopSearch) shopSearch.oninput = renderShop;
+    if (shopCategory) shopCategory.onchange = renderShop;
+    if (sort) sort.onchange = renderShop;
+
+    var buildButton = qs("#generateBuild");
+    if (buildButton) buildButton.onclick = generateBuild;
+
+    qsa("[data-budget]").forEach(function (button) {
+      button.onclick = function () {
+        var budget = qs("#builderBudget");
+        if (budget) budget.value = button.getAttribute("data-budget");
+        generateBuild();
+      };
+    });
+
+    bindProducts();
+    renderShop();
+    renderCart();
+    renderCheckout();
+  }
+
+  function render() {
+    var app = qs("#app");
+    if (!app) {
+      updateChrome();
+      bindPage();
+      return;
+    }
+    updateChrome();
+    bindPage();
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch("/api/site")
+      .then(function (response) {
+        if (!response.ok) throw new Error("Site data unavailable");
+        return response.json();
+      })
+      .then(function (data) {
+        site = data;
+        render();
+      })
+      .catch(function () {
+        var app = qs("#app");
+        if (app) {
+          app.innerHTML = "<section class='section'><div class='wrap'><div class='emptyState'><h2>Store data unavailable.</h2></div></div></section>";
+        }
+      });
+  });
+})();
