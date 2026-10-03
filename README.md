@@ -48,8 +48,8 @@ This repository now includes a Worker entrypoint (worker.js), Wrangler config (w
 Workers Builds settings:
 - Repository: Badsha31/Gadgets-
 - Branch: main
-- Root directory: /
+- Root directory: leave empty or set to the repository root
 - Build command: leave empty
-- Deploy command: npx wrangler deploy worker.js --assets ./public/
+- Deploy command: npx wrangler deploy --config ./wrangler.jsonc
 
-The existing server.js + secure persistent admin remains available for Node.js hosting. The Cloudflare storefront uses static assets and browser-side cart state; persistent Cloudflare admin editing needs a storage binding such as KV or D1.
+Wrangler uses wrangler.jsonc as the deployment source of truth. The Worker serves public/ as Workers Static Assets.
