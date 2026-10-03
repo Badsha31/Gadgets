@@ -5,7 +5,7 @@
   "description": "NEXORA TECH multi-layer commerce site on Cloudflare Workers",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "deploy": "npx wrangler deploy --config ./wrangler.jsonc",
     "check": "node --check worker.js && node --check public/cf-app.js && node --check public/app.js && node --check public/admin.js"
   },
   "devDependencies": {
