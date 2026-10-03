@@ -39,3 +39,17 @@ Made by NEXORA WEB
 Sponsored by NEXORA WEB
 
 Final commercial launch should replace demo Unsplash assets and example.com portfolio URLs with your real assets and links.
+
+
+## Cloudflare Workers deployment
+
+This repository now includes a Worker entrypoint (worker.js), Wrangler config (wrangler.jsonc) and a database-free Cloudflare storefront under public/.
+
+Workers Builds settings:
+- Repository: Badsha31/Gadgets-
+- Branch: main
+- Root directory: /
+- Build command: leave empty
+- Deploy command: npx wrangler deploy
+
+The existing server.js + secure persistent admin remains available for Node.js hosting. The Cloudflare storefront uses static assets and browser-side cart state; persistent Cloudflare admin editing needs a storage binding such as KV or D1.
