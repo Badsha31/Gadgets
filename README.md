@@ -43,13 +43,13 @@ Final commercial launch should replace demo Unsplash assets and example.com port
 
 ## Cloudflare Workers deployment
 
-This repository now includes a Worker entrypoint (worker.js), Wrangler config (wrangler.jsonc) and a database-free Cloudflare storefront under public/.
+This repository uses a Worker-only, database-free Cloudflare deployment.
 
 Workers Builds settings:
 - Repository: Badsha31/Gadgets-
 - Branch: main
-- Root directory: leave empty or set to the repository root
+- Root directory: leave empty
 - Build command: leave empty
-- Deploy command: npx wrangler deploy --config ./wrangler.jsonc
+- Deploy command: npx wrangler deploy
 
-Wrangler uses wrangler.jsonc as the deployment source of truth. The Worker serves public/ as Workers Static Assets.
+Wrangler reads wrangler.toml. The Worker entrypoint is worker.js. The storefront UI, CSS and site data are bundled into the Worker, so no static asset directory or database binding is required for deployment.
