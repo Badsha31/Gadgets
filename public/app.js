@@ -1,5 +1,5 @@
 const qs=(s,r=document)=>r.querySelector(s);
-const qsa=(s,r=document)=>Array.from(r.querySelectorAll("selector"));
+const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
 let site=null;
 let cart=JSON.parse(localStorage.getItem("nexora_cart")||"[]");
 let compare=JSON.parse(localStorage.getItem("nexora_compare")||"[]");
