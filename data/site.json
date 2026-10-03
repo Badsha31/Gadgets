@@ -1,12 +1,56 @@
 {
-  "brand":"NEXORA TECH","maker":"Made by NEXORA WEB","whatsapp":"01944299143",
-  "categories":["Laptop","Desktop PC","PC Components","Monitor","Gaming","Accessories","Gadget","Mobile & Tablet","Networking","Printer & Office","Camera","TV & Home Appliance"],
-  "products":[
-    {"id":"NT-1001","name":"NEXORA Core Gaming PC — RTX Ready","category":"Desktop PC","brand":"NEXORA","price":89990,"oldPrice":99990,"stock":12,"rating":4.9,"badge":"Best Seller","image":"https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=900&q=85"},
-    {"id":"NT-1002","name":"NEXORA Ultra 27 180Hz Gaming Monitor","category":"Monitor","brand":"NEXORA","price":32990,"oldPrice":37990,"stock":18,"rating":4.8,"badge":"Gaming","image":"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=900&q=85"},
-    {"id":"NT-1003","name":"ProBook Creator 14 — Core Ultra","category":"Laptop","brand":"NEXORA","price":104990,"oldPrice":114990,"stock":7,"rating":4.9,"badge":"New","image":"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=85"},
-    {"id":"NT-1004","name":"Mechanical RGB Gaming Keyboard","category":"Accessories","brand":"NEXORA","price":5490,"oldPrice":6490,"stock":30,"rating":4.7,"badge":"Deal","image":"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=900&q=85"},
-    {"id":"NT-1005","name":"2TB NVMe Gen4 SSD","category":"PC Components","brand":"NEXORA","price":16990,"oldPrice":19990,"stock":25,"rating":4.8,"badge":"Fast","image":"https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=900&q=85"},
-    {"id":"NT-1006","name":"Wi-Fi 6 Dual Band Router","category":"Networking","brand":"NEXORA","price":6990,"oldPrice":7990,"stock":21,"rating":4.6,"badge":"Popular","image":"https://images.unsplash.com/photo-1606904825846-647eb07f5be2?auto=format&fit=crop&w=900&q=85"}
-  ]
+  "settings": {
+    "brand": "NEXORA TECH",
+    "maker": "Made by NEXORA WEB",
+    "sponsor": "Sponsored by NEXORA WEB",
+    "tagline": "Technology, curated for how you live and work.",
+    "heroTitle": "Build. Upgrade. Go Beyond.",
+    "heroDescription": "Premium laptops, PCs, components and smart gadgets with a faster, clearer, more helpful shopping experience.",
+    "heroImage": "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=1400&q=85",
+    "ctaText": "Get Your Website",
+    "phone": "+8801944299143",
+    "whatsapp": "8801944299143",
+    "messenger": "https://m.me/nexoraweb",
+    "email": "hello@nexoraweb.example",
+    "address": "Dhaka, Bangladesh",
+    "socials": {
+      "facebook": "#",
+      "instagram": "#",
+      "tiktok": "#",
+      "youtube": "#",
+      "whatsapp": "https://wa.me/8801944299143"
+    }
+  },
+  "categories": ["Laptop","Desktop PC","PC Components","Monitor","Gaming","Accessories","Gadget","Mobile & Tablet","Networking","Printer & Office","Camera","TV & Home Appliance"],
+  "services": [
+    {"id":"svc-basic","icon":"◫","title":"Basic Website","description":"A clean, responsive online presence for individuals, small businesses and startups.","features":["Professional responsive design","Core pages and sections","WhatsApp and social integration","Basic SEO","Fast loading"]},
+    {"id":"svc-business","icon":"◈","title":"Business Website","description":"A polished digital home for established businesses that need clarity, trust and stronger conversion.","features":["Multi-page architecture","Advanced contact journey","Google Maps and reviews","SEO foundations","Editable content"]},
+    {"id":"svc-commerce","icon":"▣","title":"Premium E-commerce Website","description":"A conversion-focused store experience with product discovery, cart, checkout and admin-ready architecture.","features":["Product management","Search and categories","Cart and checkout","Order management","Performance and security"]},
+    {"id":"svc-custom","icon":"✦","title":"Custom Development","description":"Custom features, landing pages, dashboards and integrations shaped around your business.","features":["Custom UI/UX","API integrations","Admin workflows","Responsive engineering","Performance tuning"]}
+  ],
+  "packages": [
+    {"id":"pkg-basic","name":"Basic Website","price":15000,"period":"starting","featured":false,"visibility":true,"features":["Professional responsive design","Multiple sections/pages","Contact information","WhatsApp integration","Social media integration","Mobile optimization","Basic SEO","Fast loading","Basic support"]},
+    {"id":"pkg-business","name":"Business Website","price":30000,"period":"starting","featured":true,"visibility":true,"features":["Everything in Basic","More pages","Professional business layout","Advanced contact system","WhatsApp / Call integration","Google Map","Review section","SEO optimization","Advanced animations","Admin / editable content","Performance optimization"]},
+    {"id":"pkg-commerce","name":"Premium E-commerce","price":55000,"period":"starting","featured":false,"visibility":true,"features":["Everything in Business","Product management","Categories and search","Product details","Add to Cart / Order Now","Order management","Customer information","Admin dashboard","Payment-ready architecture","Delivery / order status","Review system","Advanced SEO","Security and performance"]}
+  ],
+  "products": [
+    {"id":"NT-1001","name":"NEXORA Core Gaming PC — RTX Ready","category":"Desktop PC","brand":"NEXORA","price":89990,"oldPrice":99990,"stock":12,"rating":4.9,"badge":"Best Seller","image":"https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=1000&q=85","description":"A balanced RTX-ready gaming system for high-refresh gaming and creator workloads.","features":["RTX-ready chassis","16GB-class gaming memory","Fast NVMe storage","Upgrade-friendly airflow"],"specs":{"Use case":"Gaming + creator","Storage":"1TB NVMe","Memory":"16GB","Form factor":"Desktop"}},
+    {"id":"NT-1002","name":"NEXORA Ultra 27 180Hz Gaming Monitor","category":"Monitor","brand":"NEXORA","price":32990,"oldPrice":37990,"stock":18,"rating":4.8,"badge":"Gaming","image":"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85","description":"A fast 27-inch display built for smooth gaming and everyday productivity.","features":["180Hz class refresh","27-inch panel","Low-latency focus","Minimal modern stand"],"specs":{"Panel":"27 inch","Refresh":"180Hz","Use case":"Gaming + work","Connectivity":"HDMI / DisplayPort"}},
+    {"id":"NT-1003","name":"ProBook Creator 14 — Core Ultra","category":"Laptop","brand":"NEXORA","price":104990,"oldPrice":114990,"stock":7,"rating":4.9,"badge":"New","image":"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1000&q=85","description":"A clean creator-focused laptop for productivity, design and business travel.","features":["Creator-friendly performance","Portable 14-inch form","Fast SSD","Premium build"],"specs":{"Display":"14 inch","Use case":"Creator + business","Storage":"1TB SSD","Memory":"16GB"}},
+    {"id":"NT-1004","name":"Mechanical RGB Gaming Keyboard","category":"Accessories","brand":"NEXORA","price":5490,"oldPrice":6490,"stock":30,"rating":4.7,"badge":"Deal","image":"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85","description":"Mechanical-style keys, RGB lighting and a clean desk-first footprint.","features":["RGB lighting","Mechanical-style switches","Compact layout","Gaming-ready"],"specs":{"Type":"Mechanical-style","Lighting":"RGB","Use case":"Gaming + office"}},
+    {"id":"NT-1005","name":"2TB NVMe Gen4 SSD","category":"PC Components","brand":"NEXORA","price":16990,"oldPrice":19990,"stock":25,"rating":4.8,"badge":"Fast","image":"https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1000&q=85","description":"Fast storage for games, work files and creative workflows.","features":["2TB capacity","Gen4 class speed","Low-friction upgrade","Great desktop / laptop fit"],"specs":{"Capacity":"2TB","Interface":"NVMe","Generation":"Gen4","Use case":"Storage upgrade"}},
+    {"id":"NT-1006","name":"Wi-Fi 6 Dual Band Router","category":"Networking","brand":"NEXORA","price":6990,"oldPrice":7990,"stock":21,"rating":4.6,"badge":"Popular","image":"https://images.unsplash.com/photo-1606904825846-647eb07f5be2?auto=format&fit=crop&w=1000&q=85","description":"Modern dual-band connectivity for home offices, streaming and connected devices.","features":["Wi-Fi 6 class","Dual-band coverage","Easy setup","Home-office friendly"],"specs":{"Standard":"Wi-Fi 6","Bands":"Dual band","Use case":"Home + office"}}
+  ],
+  "portfolio": [
+    {"id":"pf-01","title":"Velora Fashion Store","category":"E-commerce","description":"A fashion storefront concept focused on discovery, trust and mobile conversion.","url":"https://example.com","technology":["Responsive UI","E-commerce","CMS-ready"],"image":"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=85"},
+    {"id":"pf-02","title":"Aster Business Website","category":"Business Website","description":"A premium business website concept with editorial content hierarchy and strong conversion paths.","url":"https://example.com","technology":["UX/UI","Responsive","SEO"],"image":"https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=85"},
+    {"id":"pf-03","title":"Nexa SaaS Dashboard","category":"Web App","description":"A dashboard system designed for quick scanning, clear metrics and scalable components.","url":"https://example.com","technology":["Dashboard","Components","Accessibility"],"image":"https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=85"}
+  ],
+  "reviews": [
+    {"id":"rv-01","name":"Arif H.","rating":5,"date":"2026-08-14","text":"The shopping flow is clean, fast and much easier to understand on mobile.","image":"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"},
+    {"id":"rv-02","name":"Nusrat J.","rating":5,"date":"2026-07-28","text":"Loved the design direction and the way the products are organized.","image":"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"},
+    {"id":"rv-03","name":"Sakib R.","rating":4.8,"date":"2026-06-10","text":"The compare and PC builder idea makes choosing a setup much simpler.","image":"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80"}
+  ],
+  "orders": [],
+  "contacts": []
 }
