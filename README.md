@@ -50,6 +50,6 @@ Workers Builds settings:
 - Branch: main
 - Root directory: /
 - Build command: leave empty
-- Deploy command: npx wrangler deploy
+- Deploy command: npx wrangler deploy worker.js --assets ./public/
 
 The existing server.js + secure persistent admin remains available for Node.js hosting. The Cloudflare storefront uses static assets and browser-side cart state; persistent Cloudflare admin editing needs a storage binding such as KV or D1.
