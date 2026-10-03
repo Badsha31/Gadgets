@@ -3,7 +3,7 @@ const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
 let site=null;
 let cart=JSON.parse(localStorage.getItem("nexora_cart")||"[]");
 const money=n=>"৳"+Number(n||0).toLocaleString("en-BD");
-const safe=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;","'":"&#39;"}[m]));
+const safe=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 function save(){localStorage.setItem("nexora_cart",JSON.stringify(cart))}
 function find(id){return(site.products||[]).find(x=>x.id===id)}
 function total(){return cart.reduce((a,x)=>a+x.price*x.qty,0)}
