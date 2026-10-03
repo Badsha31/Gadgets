@@ -41,15 +41,15 @@ Sponsored by NEXORA WEB
 Final commercial launch should replace demo Unsplash assets and example.com portfolio URLs with your real assets and links.
 
 
-## Cloudflare Workers deployment
+## Cloudflare deployment
 
-This repository uses a Worker-only, database-free Cloudflare deployment.
+This repository is now a static-first Cloudflare deployment. The deployable site is generated into dist/ and contains the storefront HTML, CSS, JavaScript and site data. No database, D1, KV, Node server or Worker runtime API is required for the public storefront.
 
-Workers Builds settings:
+Workers Builds:
 - Repository: Badsha31/Gadgets-
 - Branch: main
 - Root directory: leave empty
-- Build command: leave empty
+- Build command: npm run build
 - Deploy command: npx wrangler deploy
 
-Wrangler reads wrangler.toml. The Worker entrypoint is worker.js. The storefront UI, CSS and site data are bundled into the Worker, so no static asset directory or database binding is required for deployment.
+Wrangler serves dist/ as Workers Static Assets. The browser cart and content-editing demo are database-free and local to the visitor's browser.
