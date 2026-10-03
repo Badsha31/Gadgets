@@ -11,8 +11,10 @@ function labelize(k){return k.replace(/([A-Z])/g," $1")}
 function inputField(k,v){
  const val=Array.isArray(v)?v.join(", "):typeof v==="object"&&v?JSON.stringify(v):v??"";
  const multi=["description","text"].includes(k);
+ if(k==="image"||k==="heroImage")return "<label class='full'>"+esc(labelize(k))+"<input name='"+esc(k)+"' value='"+esc(val)+"'><input type='file' accept='image/*' data-image-file='"+esc(k)+"'><small class='muted'>Upload an image or paste an https URL. Uploads are stored in the server data layer.</small></label>";
  return "<label"+(multi?" class='full'":"")+">"+esc(labelize(k))+(multi?"<textarea name='"+esc(k)+"'>"+esc(val)+"</textarea>":"<input name='"+esc(k)+"' value='"+esc(val)+"'>")+"</label>";
 }
+function fileToData(file){return new Promise((resolve,reject)=>{if(!file)return resolve("");if(file.size>1400000)return reject(new Error("Image is too large. Use an optimized image under 1.4MB."));const r=new FileReader();r.onload=()=>resolve(String(r.result||""));r.onerror=()=>reject(new Error("Could not read the image."));r.readAsDataURL(file)})}
 function money(n){return "৳"+Number(n||0).toLocaleString("en-BD")}
 async function api(url,opt){const r=await fetch(url,Object.assign({headers:{"Content-Type":"application/json"}},opt||{}));const d=await r.json();if(r.status===401){location.reload();throw new Error("Session expired")}if(!r.ok)throw new Error(d.error||"Request failed");return d}
 async function init(){
@@ -35,7 +37,7 @@ async function show(view){
  if(view==="settings"){
   const s=await api("/api/admin/site"),so=s.socials||{};
   app.innerHTML="<div class='adminCard'><h2>Website Settings</h2><form id='settingsForm' class='adminForm'>"+inputField("brand",s.brand)+inputField("maker",s.maker)+inputField("sponsor",s.sponsor)+inputField("ctaText",s.ctaText)+inputField("tagline",s.tagline)+inputField("heroTitle",s.heroTitle)+inputField("heroDescription",s.heroDescription)+inputField("heroImage",s.heroImage)+inputField("phone",s.phone)+inputField("whatsapp",s.whatsapp)+inputField("messenger",s.messenger)+inputField("email",s.email)+inputField("address",s.address)+inputField("facebook",so.facebook)+inputField("instagram",so.instagram)+inputField("tiktok",so.tiktok)+inputField("youtube",so.youtube)+inputField("socialWhatsapp",so.whatsapp)+"<div class='adminActions full'><button class='btn primary'>Save settings ↗</button></div><div class='notice' id='settingsNotice'></div></form></div>";
-  qs("#settingsForm").onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));d.socials={facebook:d.facebook,instagram:d.instagram,tiktok:d.tiktok,youtube:d.youtube,whatsapp:d.socialWhatsapp};["facebook","instagram","tiktok","youtube","socialWhatsapp"].forEach(k=>delete d[k]);try{await api("/api/admin/site",{method:"PUT",body:JSON.stringify(d)});qs("#settingsNotice").textContent="Settings saved.";qs("#settingsNotice").className="notice success"}catch(err){qs("#settingsNotice").textContent=err.message;qs("#settingsNotice").className="notice error"}};return;
+  qs("#settingsForm").onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));try{const hero=qs("[data-image-file='heroImage']",e.target);if(hero?.files?.[0])d.heroImage=await fileToData(hero.files[0])}catch(err){qs("#settingsNotice").textContent=err.message;qs("#settingsNotice").className="notice error";return}d.socials={facebook:d.facebook,instagram:d.instagram,tiktok:d.tiktok,youtube:d.youtube,whatsapp:d.socialWhatsapp};["facebook","instagram","tiktok","youtube","socialWhatsapp"].forEach(k=>delete d[k]);try{await api("/api/admin/site",{method:"PUT",body:JSON.stringify(d)});qs("#settingsNotice").textContent="Settings saved.";qs("#settingsNotice").className="notice success"}catch(err){qs("#settingsNotice").textContent=err.message;qs("#settingsNotice").className="notice error"}};return;
  }
  if(view==="orders"){
   const list=await api("/api/admin/orders");
@@ -62,6 +64,7 @@ async function showResource(type,editItem){
 function bindResource(type){
  const form=qs("#resourceForm");if(!form)return;
  form.onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(form).entries());
+  try{for(const f of qsa("[data-image-file]",form)){if(f.files&&f.files[0])d[f.dataset.imageFile]=await fileToData(f.files[0])}}catch(err){const n=qs("#resourceNotice");n.textContent=err.message;n.className="notice error";return}
   ["features","technology"].forEach(k=>{if(d[k]!==undefined)d[k]=d[k].split(",").map(x=>x.trim()).filter(Boolean)});
   ["price","oldPrice","stock","rating"].forEach(k=>{if(d[k]!==undefined&&d[k]!=="")d[k]=Number(d[k])});
   if(d.featured!==undefined)d.featured=String(d.featured)==="true";if(d.visibility!==undefined)d.visibility=String(d.visibility)!=="false";
