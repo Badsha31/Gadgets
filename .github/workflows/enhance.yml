@@ -1,0 +1,34 @@
+name: Apply Borsha Web enhancements
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  enhance:
+    if: "!contains(github.event.head_commit.message, '[enhance]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install enhancement loaders
+        run: |
+          if [ ! -f app-legacy.js ]; then cp app.js app-legacy.js; fi
+          cat > app.js <<'JS'
+          (function(){
+            var a=document.createElement('script');a.src='app-legacy.js';a.defer=true;
+            var b=document.createElement('script');b.src='app-enhancements.js';b.defer=true;
+            document.head.appendChild(a);document.head.appendChild(b);
+          })();
+          JS
+          for f in index.html properties.html property.html about.html contact.html register.html; do
+            [ -f "$f" ] || continue
+            grep -q 'app-enhancements.js' "$f" || sed -i "s#</body>#<script src=\"app-enhancements.js\"></script></body>#" "$f"
+          done
+          if [ -f admin.html ]; then
+            grep -q 'admin-enhancements.js' admin.html || sed -i "s#</body>#<script src=\"admin-enhancements.js\"></script></body>#" admin.html
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app.js app-legacy.js index.html properties.html property.html about.html contact.html register.html admin.html app-enhancements.js admin-enhancements.js
+          git commit -m 'Add agents social reviews controls [enhance]' || exit 0
+          git push
