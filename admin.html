@@ -65,4 +65,4 @@ function collectBot(){const quick=[];for(let i=1;i<=4;i++)quick.push({label:docu
 document.querySelector('#addFaq').onclick=()=>addFaqRow();document.querySelector('#saveChatbot').onclick=()=>{const s=collectBot();localStorage.setItem(BOT_KEY,JSON.stringify(s));document.querySelector('#saveStatus').textContent='Chatbot settings saved.';document.querySelector('#saveStatus').className='admin-note saved-ok';document.querySelector('#preview').textContent=s.startup;renderStats()};document.querySelector('#resetChatbot').onclick=()=>{if(confirm('Reset chatbot settings?')){localStorage.removeItem(BOT_KEY);renderBot();renderStats()}};
 renderStats();renderList();renderBot();
 </script>
-</body></html>
+<script src="admin-enhancements.js"></script></body></html>
