@@ -1,18 +1,1 @@
-{
-  "name": "nexora-tech-store",
-  "version": "4.0.0",
-  "private": true,
-  "description": "NEXORA TECH database-free Cloudflare static storefront",
-  "scripts": {
-    "build": "node build-static.js",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "check": "node --check build-static.js && node --check public/cf-app.js && node --check public/admin.js && node --check public/app.js"
-  },
-  "devDependencies": {
-    "wrangler": "^4.147.0"
-  },
-  "engines": {
-    "node": ">=20"
-  }
-}
+{"name":"borsha-web-real-estate","version":"1.0.0","private":true,"scripts":{"check":"node --check app.js"},"engines":{"node":">=18"}}

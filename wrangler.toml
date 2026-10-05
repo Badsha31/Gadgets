@@ -1,0 +1,4 @@
+name = "borsha-web-real-estate"
+compatibility_date = "2026-10-05"
+[assets]
+directory = "."
